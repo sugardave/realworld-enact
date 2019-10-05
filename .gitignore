@@ -10,8 +10,16 @@
 .classpath
 *.launch
 .settings/
+/.vscode
 
+# testing
+coverage
+
+# production
+/build
+/dist
 
 #System Files
 .DS_Store
+npm-debug.log
 Thumbs.db
