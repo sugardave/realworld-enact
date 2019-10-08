@@ -13,9 +13,7 @@ const App = kind({
 		className: 'app'
 	},
 
-	render: (props) => (
-		<MainPanel {...props} />
-	)
+	render: (props) => <MainPanel {...props} />
 });
 
 export default App;
