@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import MainPanel from '../views/MainPanel';
+import MainPage from '../views/MainPage';
 
 import css from './App.module.less';
 
@@ -13,7 +13,9 @@ const App = kind({
 		className: 'app'
 	},
 
-	render: (props) => <MainPanel {...props} />
+	render: (props) => {
+		return <MainPage {...props} />;
+	}
 });
 
 export default App;
