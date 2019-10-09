@@ -19,7 +19,18 @@
 	"private": true,
 	"repository": "",
 	"eslintConfig": {
-		"extends": "enact/strict"
+		"extends": [
+			"enact/strict",
+			"plugin:prettier/recommended"
+		]
+	},
+	"prettier": {
+		"arrowParens": "always",
+		"bracketSpacing": false,
+		"endOfLine": "lf",
+		"semi": true,
+		"singleQuote": true,
+		"useTabs": true
 	},
 	"eslintIgnore": [
 		"node_modules/*",
