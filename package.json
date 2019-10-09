@@ -37,7 +37,8 @@
 		"dist/*"
 	],
 	"enact": {
-		"template": "html-template.ejs"
+		"template": "html-template.ejs",
+		"title": "Conduit"
 	},
 	"dependencies": {
 		"@enact/core": "^3.1.2",
