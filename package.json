@@ -27,7 +27,6 @@
 	"prettier": {
 		"arrowParens": "always",
 		"bracketSpacing": false,
-		"endOfLine": "lf",
 		"semi": true,
 		"singleQuote": true,
 		"useTabs": true
