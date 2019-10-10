@@ -24,7 +24,7 @@ const Page = kind({
 			<div {...rest}>
 				{noHeader ? null : (
 					// prettier-ignore
-					<Header size="small">{`${title} Header`}</Header>
+					<Header />
 				)}
 				<article>{children}</article>
 				{noFooter ? null : (
