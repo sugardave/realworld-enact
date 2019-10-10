@@ -1,14 +1,22 @@
-import BodyText from '@enact/ui/BodyText';
 import kind from '@enact/core/kind';
 import React from 'react';
 
 const Footer = kind({
 	name: 'Footer',
-	render: ({children, ...rest}) => {
+	render: () => {
 		return (
-			<div {...rest}>
-				<BodyText centered>{children}</BodyText>
-			</div>
+			<footer>
+				<div className="container">
+					<a href="/" className="logo-font">
+						conduit
+					</a>
+					<span className="attribution">
+						An interactive learning project from{' '}
+						<a href="https://thinkster.io">Thinkster</a>. Code &amp; design
+						licensed under MIT.
+					</span>
+				</div>
+			</footer>
 		);
 	}
 });

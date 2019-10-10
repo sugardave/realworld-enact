@@ -10,8 +10,7 @@ const Page = kind({
 
 	propTypes: {
 		noFooter: PropTypes.bool,
-		noHeader: PropTypes.bool,
-		title: PropTypes.string
+		noHeader: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -19,7 +18,7 @@ const Page = kind({
 		noHeader: false
 	},
 
-	render: ({children, noFooter, noHeader, title, ...rest}) => {
+	render: ({children, noFooter, noHeader, ...rest}) => {
 		return (
 			<div {...rest}>
 				{noHeader ? null : (
@@ -29,7 +28,7 @@ const Page = kind({
 				<article>{children}</article>
 				{noFooter ? null : (
 					// prettier-ignore
-					<Footer>{`${title} Footer`}</Footer>
+					<Footer />
 				)}
 			</div>
 		);
