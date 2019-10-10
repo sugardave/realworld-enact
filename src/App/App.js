@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import MainPage from '../views/MainPage';
+import HomePage from '../views/HomePage';
 
 import css from './App.module.less';
 
@@ -14,7 +14,7 @@ const App = kind({
 	},
 
 	render: (props) => {
-		return <MainPage {...props} />;
+		return <HomePage {...props} />;
 	}
 });
 
