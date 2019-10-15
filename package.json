@@ -21,8 +21,16 @@
 	"eslintConfig": {
 		"extends": [
 			"enact/strict",
-			"plugin:prettier/recommended"
-		]
+			"plugin:prettier/recommended",
+			"prettier/react"
+		],
+		"plugins": [
+			"react-hooks"
+		],
+		"rules": {
+			"react-hooks/exhaustive-deps": "warn",
+			"react-hooks/rules-of-hooks": "error"
+		}
 	},
 	"prettier": {
 		"arrowParens": "always",
@@ -45,9 +53,13 @@
 		"@enact/i18n": "^3.1.2",
 		"@enact/ui": "^3.1.2",
 		"ilib": "^14.2.0",
+		"immer": "^4.0.1",
 		"prop-types": "^15.6.2",
-		"react": "^16.7.0",
-		"react-dom": "^16.7.0"
+		"ramda": "^0.26.1",
+		"react": "^16.8.0",
+		"react-dom": "^16.8.0",
+		"react-router-config": "^5.1.1",
+		"react-router-dom": "^5.1.2"
 	},
 	"devDependencies": {
 		"babel-eslint": "^10.0.3",

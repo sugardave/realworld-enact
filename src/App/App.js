@@ -1,35 +1,46 @@
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import React from 'react';
-import {Route} from '@enact/ui/Routable';
+import {renderRoutes} from 'react-router-config';
+import {useLocation} from 'react-router-dom';
 
 // Local Components
-import HomePage from '../views/HomePage';
-import Panels from '../components/Panels';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 import css from './App.module.less';
 
-const App = kind({
+const AppBase = kind({
 	name: 'App',
+
+	propTypes: {
+		route: PropTypes.object
+	},
 
 	styles: {
 		css,
 		className: 'app'
 	},
 
-	render: (props) => {
+	render: ({route: {routes}, ...rest}) => {
 		return (
-			<Panels noCloseButton path="/#/" {...props}>
-				<Route path="#" component={HomePage}>
-					<Route path="article" />
-					<Route path="editor" />
-					<Route path="login" />
-					<Route path="profile" />
-					<Route path="register" />
-					<Route path="settings" />
-				</Route>
-			</Panels>
+			<div {...rest}>
+				<Header />
+				{renderRoutes(routes)}
+				<Footer />
+			</div>
 		);
 	}
 });
 
+const App = ({...props}) => {
+	// eslint-disable-next-line enact/prop-types
+	delete props.staticContext;
+	const location = useLocation();
+	const appProps = {...props, location};
+
+	return <AppBase {...appProps} />;
+};
+
 export default App;
+export {App};

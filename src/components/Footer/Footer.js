@@ -1,15 +1,17 @@
 import kind from '@enact/core/kind';
+import {NavLink} from 'react-router-dom';
 import React from 'react';
 
 const Footer = kind({
 	name: 'Footer',
+
 	render: () => {
 		return (
 			<footer>
 				<div className="container">
-					<a href="/" className="logo-font">
+					<NavLink className="logo-font" to="/">
 						conduit
-					</a>
+					</NavLink>
 					<span className="attribution">
 						An interactive learning project from{' '}
 						<a href="https://thinkster.io">Thinkster</a>. Code &amp; design

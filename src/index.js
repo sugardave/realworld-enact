@@ -1,9 +1,11 @@
 import React from 'react';
 import {render} from 'react-dom';
-import App from './App';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {renderRoutes} from 'react-router-config';
 
-// prettier-ignore
-const appElement = (<App />);
+import routes from './routeConfig';
+
+const appElement = <Router>{renderRoutes(routes)}</Router>;
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {

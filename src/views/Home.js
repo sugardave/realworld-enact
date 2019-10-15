@@ -1,14 +1,15 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import Page from '../components/Page';
+// Local Components
+import Panel from '../components/Panel/Panel';
 
-const HomePage = kind({
-	name: 'HomePage',
+const Home = kind({
+	name: 'Home',
 
 	render: (props) => {
 		return (
-			<Page {...props}>
+			<Panel {...props}>
 				<div className="home-page">
 					<div className="banner">
 						<div className="container">
@@ -118,10 +119,10 @@ const HomePage = kind({
 						</div>
 					</div>
 				</div>
-			</Page>
+			</Panel>
 		);
 	}
 });
 
-export default HomePage;
-export {HomePage};
+export default Home;
+export {Home};
