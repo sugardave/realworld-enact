@@ -1,62 +1,146 @@
+import {
+	adaptEvent,
+	forward,
+	handle,
+	log,
+	preventDefault
+} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useState} from 'react';
 
 // Local Components
+import NavLink from '../components/NavLink';
 import Panel from '../components/Panel/Panel';
 
-const Auth = kind({
+// Utilities
+import {Auth as AuthRequests} from '../utils/agent';
+import {useAppContext} from '../utils/state';
+
+const makeErrorList = ({errors = [], type}) => {
+	const errorsArray = typeof errors === 'string' ? [errors] : [...errors];
+	return errorsArray.map((error, index) => (
+		<li key={`${type}-error-${index}`}>{`${type} ${error}`}</li>
+	));
+};
+
+const handleSubmit = (
+	ev,
+	{email, match: {path}, username, password, setErrors, setStateToken}
+) => {
+	if (path === '/register') {
+		if (!username || !password || !email) {
+			// cannot register without all three things!
+			return false;
+		}
+		// clear errors before a new auth request
+		setErrors(null);
+		AuthRequests.register({username, email, password})
+			.then(({user: {token}}) => setStateToken(token))
+			.catch(({response: {body: {errors}}}) => setErrors(errors));
+	} else {
+		console.log('LOGIN');
+	}
+};
+
+const submitHandler = handle(
+	preventDefault,
+	log('submitHandler'),
+	handleSubmit
+);
+
+const AuthBase = kind({
 	name: 'Auth',
 
 	propTypes: {
 		route: PropTypes.object
 	},
 
-	computed: {
-		isRegistering: ({route: {register}}) => !!register
+	handlers: {
+		onChangeEmail: adaptEvent(
+			({target: {value}}) => value,
+			forward('onChangeEmail')
+		),
+		onChangePassword: adaptEvent(
+			({target: {value}}) => value,
+			forward('onChangePassword')
+		),
+		onChangeUserName: adaptEvent(
+			({target: {value}}) => value,
+			forward('onChangeUserName')
+		),
+		onSubmit: submitHandler
 	},
 
-	render: ({isRegistering, ...rest}) => {
+	computed: {
+		errors: ({errors}) => {
+			if (!errors) return;
+			const allErrors = [];
+
+			for (const error in errors) {
+				allErrors.push(...makeErrorList({type: error, errors: errors[error]}));
+			}
+
+			return allErrors;
+		},
+		isRegistering: ({match: {isExact, path}}) =>
+			path === '/register' && isExact,
+		viewLabel: ({match: {path}}) =>
+			path === '/register' ? 'Sign up' : 'Sign in'
+	},
+
+	render: ({
+		errors,
+		isRegistering,
+		onChangeEmail,
+		onChangePassword,
+		onChangeUserName,
+		onSubmit,
+		viewLabel,
+		...rest
+	}) => {
 		return (
 			<Panel {...rest}>
 				<div className="auth-page">
 					<div className="container page">
 						<div className="row">
 							<div className="col-md-6 offset-md-3 col-xs-12">
-								<h1 className="text-xs-center">Sign up</h1>
-								<p className="text-xs-center">
-									<a href="">Have an account?</a>
-								</p>
-
-								<ul className="error-messages">
-									<li>That email is already taken</li>
-								</ul>
-								<form>
+								<h1 className="text-xs-center">{viewLabel}</h1>
+								{!isRegistering ? null : (
+									<p className="text-xs-center">
+										<NavLink to="/login">Have an account?</NavLink>
+									</p>
+								)}
+								<ul className="error-messages">{errors}</ul>
+								<form onSubmit={onSubmit}>
 									{!isRegistering ? null : (
 										<fieldset className="form-group">
 											<input
 												className="form-control form-control-lg"
-												type="text"
+												onChange={onChangeUserName}
 												placeholder="Your Name"
+												type="text"
 											/>
 										</fieldset>
 									)}
 									<fieldset className="form-group">
 										<input
 											className="form-control form-control-lg"
-											type="text"
+											onChange={onChangeEmail}
 											placeholder="Email"
+											type="text"
 										/>
 									</fieldset>
 									<fieldset className="form-group">
 										<input
 											className="form-control form-control-lg"
-											type="password"
+											onChange={onChangePassword}
 											placeholder="Password"
+											type="password"
 										/>
 									</fieldset>
 									<button className="btn btn-lg btn-primary pull-xs-right">
-										Sign up
+										{viewLabel}
 									</button>
 								</form>
 							</div>
@@ -67,6 +151,32 @@ const Auth = kind({
 		);
 	}
 });
+
+const Auth = (props) => {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [username, setStateUserName] = useState('');
+	const [errors, setErrors] = useState([]);
+	const {
+		auth: {setStateToken, setStateUser}
+	} = useAppContext();
+
+	const authProps = {
+		...props,
+		email,
+		errors,
+		onChangeEmail: setEmail,
+		onChangePassword: setPassword,
+		onChangeUserName: setStateUserName,
+		password,
+		setErrors,
+		setStateToken,
+		setStateUser,
+		username
+	};
+
+	return <AuthBase {...authProps} />;
+};
 
 export default Auth;
 export {Auth};
