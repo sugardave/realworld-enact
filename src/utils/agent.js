@@ -85,7 +85,6 @@ export const Profile = {
 };
 
 export const setToken = (_token) => {
-	console.log('SETTING TOKEN', _token);
 	token = _token;
 };
 

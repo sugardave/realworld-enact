@@ -26,7 +26,7 @@ const makeErrorList = ({errors = [], type}) => {
 
 const handleSubmit = (
 	ev,
-	{email, match: {path}, username, password, setErrors, setStateToken}
+	{email, match: {path}, username, password, setErrors, setToken, setUser}
 ) => {
 	if (path === '/register') {
 		if (!username || !password || !email) {
@@ -34,9 +34,13 @@ const handleSubmit = (
 			return false;
 		}
 		// clear errors before a new auth request
-		setErrors(null);
+		setErrors([]);
 		AuthRequests.register({username, email, password})
-			.then(({user: {token}}) => setStateToken(token))
+			.then(({user}) => {
+				const {token} = user;
+				setUser(user);
+				setToken(token);
+			})
 			.catch(({response: {body: {errors}}}) => setErrors(errors));
 	} else {
 		console.log('LOGIN');
@@ -75,13 +79,14 @@ const AuthBase = kind({
 	computed: {
 		errors: ({errors}) => {
 			if (!errors) return;
-			const allErrors = [];
+			const orderedKeys = ['username', 'email', 'password'];
 
-			for (const error in errors) {
-				allErrors.push(...makeErrorList({type: error, errors: errors[error]}));
-			}
-
-			return allErrors;
+			return orderedKeys.map((k) => {
+				return makeErrorList({
+					type: k,
+					errors: errors[k]
+				});
+			});
 		},
 		isRegistering: ({match: {isExact, path}}) =>
 			path === '/register' && isExact,
@@ -99,6 +104,9 @@ const AuthBase = kind({
 		viewLabel,
 		...rest
 	}) => {
+		delete rest.setErrors;
+		delete rest.setToken;
+		delete rest.setUser;
 		return (
 			<Panel {...rest}>
 				<div className="auth-page">
@@ -155,10 +163,10 @@ const AuthBase = kind({
 const Auth = (props) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [username, setStateUserName] = useState('');
+	const [username, setUserName] = useState('');
 	const [errors, setErrors] = useState([]);
 	const {
-		auth: {setStateToken, setStateUser}
+		auth: {setToken, setUser}
 	} = useAppContext();
 
 	const authProps = {
@@ -167,11 +175,11 @@ const Auth = (props) => {
 		errors,
 		onChangeEmail: setEmail,
 		onChangePassword: setPassword,
-		onChangeUserName: setStateUserName,
+		onChangeUserName: setUserName,
 		password,
 		setErrors,
-		setStateToken,
-		setStateUser,
+		setToken,
+		setUser,
 		username
 	};
 

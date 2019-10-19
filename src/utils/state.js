@@ -1,4 +1,5 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import {setToken as setAuthToken} from './agent';
 
 export const AppContext = React.createContext(null);
 
@@ -8,17 +9,23 @@ export const useAppContext = () => {
 
 // eslint-disable-next-line enact/display-name
 export default ({children}) => {
-	const [token, setStateToken] = useState();
-	const [user, setStateUser] = useState({});
+	const [token, setToken] = useState();
+	const [user, setUser] = useState({});
 
 	const initialValue = {
 		auth: {
-			token,
-			setStateToken,
-			setStateUser
+			setToken,
+			setUser,
+			token
 		},
 		user
 	};
+
+	useEffect(() => {
+		// use the new token for all API requests
+		setAuthToken(token);
+	}, [token]);
+
 	return (
 		<AppContext.Provider value={initialValue}>{children}</AppContext.Provider>
 	);
