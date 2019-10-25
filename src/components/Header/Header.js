@@ -1,27 +1,53 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Repeater from '@enact/ui/Repeater';
+import {withRouter} from 'react-router-dom';
 
 // Local Components
 import NavItem from '../NavItem';
 import NavLink from '../NavLink';
 
-const navLinkProps = [
-	{children: 'Home', to: '', exact: true},
-	{children: 'New Post', to: '', icon: 'ion-compose'},
-	{children: 'Settings', to: '', icon: 'ion-gear-a'},
-	{children: 'Sign up', to: 'register'}
-];
+// Utilities
+import {useAppContext} from '../../utils/state';
 
-const navLinks = navLinkProps.map((link, index) => ({
-	key: `header-nav-item-${index}`,
-	...link
-}));
+const homeLinks = [{children: 'Home', to: '/', exact: true}],
+	publicLinks = [
+		{children: 'Sign in', to: 'login'},
+		{children: 'Sign up', to: 'register'}
+	],
+	privateLinks = [
+		{
+			children: 'New Post',
+			to: '',
+			icon: 'ion-compose'
+		},
+		{
+			children: 'Settings',
+			to: '',
+			icon: 'ion-gear-a'
+		},
+		{
+			children: '@username',
+			to: 'profile'
+		}
+	];
 
-const Header = kind({
+const HeaderBase = kind({
 	name: 'Header',
 
-	render: () => {
+	computed: {
+		// eslint-disable-next-line enact/prop-types
+		navLinks: ({user}) => {
+			const links = homeLinks.concat(
+				user && Object.keys(user).length ? privateLinks : publicLinks
+			);
+			return links.flat().map((link, index) => {
+				return Object.assign({...link}, {key: `header-nav-item-${index}`});
+			});
+		}
+	},
+
+	render: ({navLinks}) => {
 		return (
 			<nav className="navbar navbar-light">
 				<div className="container">
@@ -39,6 +65,16 @@ const Header = kind({
 			</nav>
 		);
 	}
+});
+
+
+const Header = withRouter((props) => {
+	const {user} = useAppContext();
+	const headerProps = {
+		...props,
+		user
+	};
+	return <HeaderBase {...headerProps} />;
 });
 
 export default Header;

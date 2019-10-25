@@ -26,7 +26,16 @@ const makeErrorList = ({errors = [], type}) => {
 
 const handleSubmit = (
 	ev,
-	{email, match: {path}, username, password, setErrors, setToken, setUser}
+	{
+		email,
+		history,
+		match: {path},
+		username,
+		password,
+		setErrors,
+		setToken,
+		setUser
+	}
 ) => {
 	if (path === '/register') {
 		if (!username || !password || !email) {
@@ -40,6 +49,7 @@ const handleSubmit = (
 				const {token} = user;
 				setUser(user);
 				setToken(token);
+				history.push('/');
 			})
 			.catch(({response: {body: {errors}}}) => setErrors(errors));
 	} else {
